@@ -16,7 +16,7 @@ const ExpenseForm = ({ onSaveExpense, onCancel, on }) => {
 
   const amountChangeHandler = (e) => {
     setUserInput((prevState) => {
-      return { ...prevState, amount: e.target.value };
+      return { ...prevState, amount: +e.target.value };
     });
   };
 
