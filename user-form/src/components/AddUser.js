@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import Card from './UI/Card';
 
@@ -7,12 +7,15 @@ import Button from './UI/Button';
 import ErrorModal from './UI/ErrorModal';
 
 const AddUser = ({ onAddUser }) => {
-  const [username, setUsername] = useState('');
-  const [age, setAge] = useState('');
   const [error, setError] = useState();
+  const usernameRef = useRef();
+  const ageRef = useRef();
 
   const addUserHandler = (e) => {
     e.preventDefault();
+
+    const username = usernameRef.current.value;
+    const age = ageRef.current.value;
 
     if (!username.trim() || !age.trim()) {
       setError({
@@ -32,13 +35,9 @@ const AddUser = ({ onAddUser }) => {
 
     onAddUser({ username, age, id: Math.random() });
 
-    setUsername('');
-    setAge('');
+    usernameRef.current.value = '';
+    ageRef.current.value = '';
   };
-
-  const usernameHandler = (e) => setUsername(e.target.value);
-
-  const ageHandler = (e) => setAge(e.target.value);
 
   const closeModalHandler = () => setError();
 
@@ -54,21 +53,9 @@ const AddUser = ({ onAddUser }) => {
       <Card className={styles.input}>
         <form onSubmit={addUserHandler}>
           <label htmlFor="name">User</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={username}
-            onChange={usernameHandler}
-          />
+          <input type="text" name="name" id="name" ref={usernameRef} />
           <label htmlFor="age">Age</label>
-          <input
-            type="number"
-            name="age"
-            id="age"
-            value={age}
-            onChange={ageHandler}
-          />
+          <input type="number" name="age" id="age" ref={ageRef} />
           <Button type="submit">Add User</Button>
         </form>
       </Card>
