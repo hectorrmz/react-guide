@@ -3,14 +3,12 @@ import Input from '../../UI/Input';
 
 import styles from './MealForm.module.css';
 
-const MealItemForm = ({ id }) => {
+const MealItemForm = ({ id, onAddToCart }) => {
   const amountInputRef = useRef();
   const [isValid, setIsValid] = useState(true);
 
   const addMealHandler = (event) => {
     event.preventDefault();
-
-    console.log('test');
 
     const inputAmount = amountInputRef.current.value;
     const amount = +inputAmount;
@@ -19,6 +17,8 @@ const MealItemForm = ({ id }) => {
       setIsValid(false);
       return;
     }
+
+    onAddToCart(amount);
   };
 
   return (
