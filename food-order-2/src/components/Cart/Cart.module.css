@@ -44,3 +44,13 @@
   background-color: #8a2b06;
   color: white;
 }
+
+.actions .button:disabled {
+  cursor: not-allowed;
+}
+
+.error {
+  color: #e35959;
+  margin: 5px 0;
+  font-size: 13px;
+}

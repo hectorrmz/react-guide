@@ -16,9 +16,20 @@ function App() {
     setCartIsShown(false);
   };
 
+  const submitOrderHandler = (items) => {
+    console.log(items);
+
+    fetch('https://react-http-80271-default-rtdb.firebaseio.com/orders.json', {
+      method: 'POST',
+      body: JSON.stringify(items[0]),
+    });
+  };
+
   return (
     <CartProvider>
-      {cartIsShown && <Cart onClose={hideCartHandler} />}
+      {cartIsShown && (
+        <Cart onClose={hideCartHandler} onSubmit={submitOrderHandler} hg24 />
+      )}
       <Header onShowCart={showCartHandler} />
       <main>
         <Meals />
