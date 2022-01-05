@@ -1,9 +1,9 @@
 export default class Todo {
-  id: string;
+  id: number;
   text: string;
 
-  constructor(id: string, text: string) {
-    this.id = id;
+  constructor(text: string) {
+    this.id = Math.random();
     this.text = text;
   }
 }

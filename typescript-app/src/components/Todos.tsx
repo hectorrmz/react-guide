@@ -1,13 +1,25 @@
 import React from 'react';
 import Todo from '../models/todo';
+import TodoItem from './TodoItem';
 
-const Todos: React.FC<{ items: Todo[] }> = ({ items }) => {
+import styles from './Todos.module.css';
+
+const Todos: React.FC<{ items: Todo[]; onItemClick: (id: number) => void }> = ({
+  items,
+  onItemClick,
+}) => {
   return (
-    <ul>
-      {items.map((item) => (
-        <li key={item.id}>{item.text}</li>
-      ))}
-    </ul>
+    <>
+      <ul className={styles.todos}>
+        {items.map((item) => (
+          <TodoItem
+            key={item.id}
+            text={item.text}
+            onClick={onItemClick.bind(null, item.id)}
+          />
+        ))}
+      </ul>
+    </>
   );
 };
 

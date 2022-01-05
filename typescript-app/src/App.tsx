@@ -1,15 +1,26 @@
+import { useState } from 'react';
+import NewTodo from './components/NewTodo';
 import Todos from './components/Todos';
 import Todo from './models/todo';
 
 function App(): JSX.Element {
-  const todos = [
-    new Todo('id1', 'Learn React'),
-    new Todo('id2', 'Learn Typescript'),
-  ];
+  const [todos, setTodos] = useState<Todo[]>([
+    new Todo('Learn React'),
+    new Todo('Learn Typescript'),
+  ]);
+
+  const onSubmitHandler = (text: string) => {
+    setTodos((prevState) => [...prevState, new Todo(text)]);
+  };
+
+  const removeItemHandler = (id: number) => {
+    setTodos((prevState) => prevState.filter((item) => item.id !== id));
+  };
 
   return (
     <div>
-      <Todos items={todos} />
+      <NewTodo onAddToDo={onSubmitHandler} />
+      <Todos items={todos} onItemClick={removeItemHandler} />
     </div>
   );
 }
