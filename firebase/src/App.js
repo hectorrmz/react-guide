@@ -1,29 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
 import { storage } from './firebase';
-import { ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
-import { useEffect } from 'react';
+import { ref, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
+import { useEffect, useState } from 'react';
+import Uploader from './components/Uploader';
+import { Container } from '@mui/material';
+import FilesList from './components/FilesList';
 
 function App() {
-  const testRef = ref(storage, 'test');
-  const imageRef = ref(testRef, 'logo.png');
-
-  console.log(imageRef.fullPath);
-
-  const uploadHandler = (element) => {
-    const file = element.target.files[0];
-
-    uploadBytes(ref(storage, 'test/logo-1.png'), file).then((snapshot) => {
-      console.log('Uploaded a blob or file!', snapshot);
-    });
-  };
+  const [files, setFiles] = useState([]);
 
   const listFiles = async () => {
+    setFiles([]);
     const response = await listAll(ref(storage));
 
     response.items.forEach((itemRef) => {
       // All the items under listRef.
-      console.log(itemRef.fullPath);
+      setFiles((prev) => [...prev, itemRef.name].sort());
+      console.log(itemRef);
     });
   };
 
@@ -31,9 +24,10 @@ function App() {
     listFiles();
   }, []);
 
-  const downloadHandler = async () => {
-    const url = await getDownloadURL(ref(storage, 'test'));
-    console.log(url);
+  const onFileClickHandler = async (file) => {
+    console.log(file);
+
+    const url = await getDownloadURL(ref(storage, file));
 
     window.open(
       url,
@@ -42,14 +36,31 @@ function App() {
     );
   };
 
+  const deleteFileHandler = (file) => {
+    const fileRef = ref(storage, file);
+
+    // Delete the file
+    deleteObject(fileRef)
+      .then(() => {
+        // File deleted successfully
+        listFiles();
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+      });
+  };
+
   return (
-    <>
-      <input type="file" name="upload" onChange={uploadHandler} />
-      <br />
-      <br />
-      <button onClick={downloadHandler}>Download</button>
-      <img id="myimg" />
-    </>
+    <Container sx={{ p: 2, width: '60%' }}>
+      <h1>Testing Firebase</h1>
+      <Uploader onFileUploaded={listFiles} />
+
+      <FilesList
+        files={files}
+        onFileClick={onFileClickHandler}
+        onDeleteFile={deleteFileHandler}
+      />
+    </Container>
   );
 }
 
